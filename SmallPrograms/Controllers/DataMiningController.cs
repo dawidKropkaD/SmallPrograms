@@ -13,5 +13,15 @@ namespace SmallPrograms.Controllers
         {
             return View();
         }
+
+        public ActionResult Perceptron()
+        {
+            return View();
+        }
+
+        public ActionResult KMeans()
+        {
+            return View();
+        }
     }
 }
