@@ -1,1 +1,3 @@
-config.txt
+*.suo
+bin/
+obj/
