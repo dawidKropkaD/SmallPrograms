@@ -162,6 +162,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\DataMining\Index.cshtml" />
     <Content Include="Views\DataMining\Perceptron.cshtml" />
+    <Content Include="Views\DataMining\KMeans.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
