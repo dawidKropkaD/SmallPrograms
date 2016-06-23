@@ -23,6 +23,7 @@ namespace SmallPrograms.Controllers
         {
             int zmiennaDoUsuniecia = 0;
             zmiennaDoUsuniecia++;
+            ++zmiennaDoUsuniecia;
 
             return View();
         }
