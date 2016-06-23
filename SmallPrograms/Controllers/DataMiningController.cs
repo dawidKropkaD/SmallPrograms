@@ -21,6 +21,9 @@ namespace SmallPrograms.Controllers
 
         public ActionResult KMeans()
         {
+            int zmiennaDoUsuniecia = 0;
+            zmiennaDoUsuniecia++;
+
             return View();
         }
     }
