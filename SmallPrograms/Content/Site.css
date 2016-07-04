@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+tab { 
+    padding-left: 4em;
+}
+
+.point-field {
+    width: 50px;
+}

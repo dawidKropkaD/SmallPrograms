@@ -1,9 +1,141 @@
-﻿@{
+﻿@model IList<SmallPrograms.Areas.DataMining.Models.Point>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-@{ 
     ViewBag.Title = "Algorytm k-means";
 }
 
 <h2>Algorytm k-means (k-średnich)</h2>
+<br /><br />
+<h4>Wybierz metodę wprowadzenia danych</h4>
 
+@Html.RadioButton("MethodOfDataEntry", "manually", true) Ręczne wprowadzenie danych <tab></tab>
+@Html.RadioButton("MethodOfDataEntry", "random") Dane losowe <tab></tab>
+@Html.RadioButton("MethodOfDataEntry", "file") Dane z pliku
+<br /><br />
+
+<div id="ManuallyMethod">
+    <a href="javascript:InsertRow();">Dodaj wiersz</a><tab></tab>
+    <a href="javascript:DeleteRow();">Usuń wiersz</a><tab></tab>
+    <a href="javascript:InsertColumn();">Dodaj kolumnę</a><tab></tab>
+    <a href="javascript:DeleteColumn();">Usuń kolumnę</a>
+
+    @using (Html.BeginForm("KMeans", "Programs", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @ViewBag.Valid
+        <br />
+        
+        <table id="tblPoints" border="0">
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x[0].Coordinate[0], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[0].Coordinate[0], null, new { @class = "alert-danger" })
+                </td>
+                <td>
+                    @Html.EditorFor(x => x[0].Coordinate[1], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[0].Coordinate[1], null, new { @class = "alert-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x[1].Coordinate[0], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[1].Coordinate[0], null, new { @class = "alert-danger" })
+                </td>
+                <td>
+                    @Html.EditorFor(x => x[1].Coordinate[1], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[1].Coordinate[1], null, new { @class = "alert-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.EditorFor(x => x[2].Coordinate[0], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[2].Coordinate[0], null, new { @class = "alert-danger" })
+                </td>
+                <td>
+                    @Html.EditorFor(x => x[2].Coordinate[1], new { htmlAttributes = new { @class = "form-control point-field" }, })
+                    @Html.ValidationMessageFor(x => x[2].Coordinate[1], null, new { @class = "alert-danger" })
+                </td>
+            </tr>
+        </table>
+
+        <input type="submit" class="btn btn-default" name="btnOK" value="OK" />
+    }
+</div>
+
+
+
+
+
+
+
+@section scripts {
+<script>
+    function InsertRow() {
+        var rowsNumber = document.getElementById("tblPoints").rows.length;
+        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+
+        var table = document.getElementById("tblPoints");
+        var row = table.insertRow(rowsNumber);
+
+        for (i = 0; i < columnsNumber; i++) {
+            var cell = row.insertCell(i);
+
+            var fieldName = "[" + rowsNumber + "].Coordinate[" + i + "]";
+            var input = CreateInputField(fieldName);
+            cell.appendChild(input);
+        }
+    }
+
+    function CreateInputField(name) {
+        var input = document.createElement("input");
+        input.className = "form-control point-field text-box single-line";
+        input.setAttribute("data-val", "true");
+        input.setAttribute("data-val-number", "The field Double must be a number.");
+        input.setAttribute("data-val-required", "Pole Double jest wymagane.");
+        input.name = name;
+        input.type = "text";
+        input.value = "";
+
+        return input;
+    }
+
+    function DeleteRow() {
+        var rowsNumber = document.getElementById("tblPoints").rows.length;
+        if (rowsNumber > 2) {
+            document.getElementById("tblPoints").deleteRow(rowsNumber - 1);
+        }
+        else {
+            alert("Liczba punktów nie może być mniejsz niż 2.");
+        }
+    }
+
+    function InsertColumn() {
+        var rowsNumber = document.getElementById("tblPoints").rows.length;
+        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+
+        for (i = 0; i < rowsNumber; i++) {
+            var row = document.getElementById("tblPoints").rows[i];
+            var cell = row.insertCell(-1);
+
+            var fieldName = "[" + i + "].Coordinate[" + columnsNumber + "]";
+            var input = CreateInputField(fieldName);
+            cell.appendChild(input);
+        }
+    }
+
+    function DeleteColumn() {
+        var rowsNumber = document.getElementById("tblPoints").rows.length;
+        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+
+        if (columnsNumber > 1) {
+            for (i = 0; i < rowsNumber; i++) {
+                var row = document.getElementById("tblPoints").rows[i];
+                row.deleteCell(-1);
+            }
+        }
+        else {
+            alert("Liczba wymiarów nie może być mniejsz niż 1.");
+        }
+    }
+</script>
+}
