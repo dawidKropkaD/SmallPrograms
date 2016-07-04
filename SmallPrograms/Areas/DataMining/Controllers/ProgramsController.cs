@@ -1,4 +1,5 @@
 ﻿using SmallPrograms.Areas.DataMining.Models;
+using SmallPrograms.Areas.DataMining.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,34 +18,27 @@ namespace SmallPrograms.Areas.DataMining.Controllers
 
         public ActionResult KMeans()
         {
-            List<Point> pList = new List<Point>();
-            Point p = new Point();
-            Point p2 = new Point();
-            Point p3 = new Point();
+            KMeansViewModel kMeansVM = new KMeansViewModel();
+            kMeansVM.pointList = new List<Point>();
+            kMeansVM.centroidList = new List<Centroid>();
 
-            p.Coordinate = new double[3];
-            pList.Add(p);
-            pList.Add(p);
+            //add 3 2D points
+            kMeansVM.pointList.Add(new Point(-1, new double[2]));
+            kMeansVM.pointList.Add(new Point(-1, new double[2]));
+            kMeansVM.pointList.Add(new Point(-1, new double[2]));
 
-            p3.Coordinate = new double[3];
-            p3.Coordinate[0] = 10;
-            p3.Coordinate[1] = 11;
-            p3.Coordinate[2] = 12;
-            pList.Add(p3);
+            //add 2 centroids
+            kMeansVM.centroidList.Add(new Centroid(1, new double[2]));
+            kMeansVM.centroidList.Add(new Centroid(2, new double[2]));
 
-            p2.Coordinate = new double[2];
-            p2.Coordinate[0] = 3;
-            p2.Coordinate[1] = 6;
-            pList.Add(p2);
-            return View(pList);
+
+            return View(kMeansVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult KMeans(string value, List<Point> pointList, string Str)
+        public ActionResult KMeans(KMeansViewModel kMeansVM)
         {
-            pointList[3].Coordinate[0] = 7;
-            pointList[0].Coordinate[0] = 7;
             if (ModelState.IsValid)
             {
                 ViewBag.Valid = "True";
@@ -54,7 +48,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                 ViewBag.Valid = "False";
             }
 
-            return View(pointList);
+            return View(kMeansVM);
         }
     }
 }

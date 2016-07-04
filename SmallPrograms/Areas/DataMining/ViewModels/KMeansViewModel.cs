@@ -8,7 +8,7 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
 {
     public class KMeansViewModel
     {
-        List<Point> pointList = new List<Point>();
-        List<Centroid> centroidList = new List<Centroid>();
+        public List<Point> pointList { get; set; }
+        public List<Centroid> centroidList { get; set; }
     }
 }
