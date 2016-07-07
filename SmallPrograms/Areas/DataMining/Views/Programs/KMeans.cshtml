@@ -8,43 +8,88 @@
 <br /><br />
 <h4>Wybierz metodę wprowadzenia danych</h4>
 
-@Html.RadioButton("MethodOfDataEntry", "manually", true) Ręczne wprowadzenie danych <tab></tab>
-@Html.RadioButton("MethodOfDataEntry", "random") Dane losowe <tab></tab>
-@Html.RadioButton("MethodOfDataEntry", "file") Dane z pliku
+@Html.RadioButton("dataEntryMethod", Model.DataEntryMethods.Keys.ElementAt(0), Model.DataEntryMethods["manually"]) 
+Ręczne wprowadzenie danych<tab></tab>
+@Html.RadioButton("dataEntryMethod", Model.DataEntryMethods.Keys.ElementAt(1), Model.DataEntryMethods["random"]) 
+Dane losowe
 <br /><br />
 
-<div id="ManuallyMethod">
-    <a href="javascript:InsertRow();">Dodaj wiersz</a><tab></tab>
-    <a href="javascript:DeleteRow();">Usuń wiersz</a><tab></tab>
-    <a href="javascript:InsertColumn();">Dodaj kolumnę</a><tab></tab>
-    <a href="javascript:DeleteColumn();">Usuń kolumnę</a>
+<div id="manuallyMethod">
+    <a href="javascript:InsertRow('tblPoints');">Dodaj punkt</a><tab></tab>
+    <a href="javascript:InsertRow('tblCentroids');">Dodaj centroid</a><tab></tab>
+    <a href="javascript:InsertColumn('tblPoints', 'tblCentroids');">Dodaj wymiar</a><tab></tab>
+    <a href="javascript:DeleteRow('tblPoints', 2);">Usuń punkt</a><tab></tab>
+    <a href="javascript:DeleteRow('tblCentroids', 1);">Usuń centroid</a><tab></tab>
+    <a href="javascript:DeleteColumn('tblPoints', 'tblCentroids');">Usuń wymiar</a>
 
     @using (Html.BeginForm("KMeans", "Programs", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.SelectedMethod, new { @Value = "manually" })
         @ViewBag.Valid
         <br />
-        
-        <table id="tblPoints" border="0">
-            <caption align="left">Wymiar przestrzeni</caption>
-            @for(int row = 0; row < Model.pointList.Count; row++)
+
+        <table id="tblPoints" border="0" style="display:inline">
+            <caption>Punkty</caption>
+            @for (int row = 0; row < Model.PointList.Count; row++)
             {
                 <tr>
-                    @for (int column = 0; column < Model.pointList[row].Coordinate.Length; column++)
+                    @for (int column = 0; column < Model.PointList[row].Coordinate.Length; column++)
                     {
                         <td>
                             @Html.Editor("pointList[" + row + "].Coordinate[" + column + "]", new { htmlAttributes = new { @class = "form-control point-field" }, })
-                            @Html.ValidationMessageFor(x => x.pointList[row].Coordinate[column], null, new { @class = "alert-danger" })
+                            @Html.ValidationMessageFor(x => x.PointList[row].Coordinate[column], null, new { @class = "alert-danger" })
                         </td>
                     }
                 </tr>
             }
         </table>
+        <tab></tab>
+        <table id="tblCentroids" border="0" style="display:inline">
+            <caption>Centroidy</caption>
+            @for (int row = 0; row < Model.CentroidList.Count; row++)
+            {
+                <tr>
+                    @for (int column = 0; column < Model.CentroidList[row].Coordinate.Length; column++)
+                    {
+                        <td>
+                            @Html.Editor("centroidList[" + row + "].Coordinate[" + column + "]", new { htmlAttributes = new { @class = "form-control point-field" }, })
+                            @Html.ValidationMessageFor(x => x.CentroidList[row].Coordinate[column], null, new { @class = "alert-danger" })
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+        <br /><br />
+        
         <input type="submit" class="btn btn-default" name="btnOK" value="OK" />
     }
 </div>
 
+<div id="randomMethod">
+    @Html.ValidationMessage("randomMethod", new { @class = "alert-danger" })
 
+    @using (Html.BeginForm("KMeans", "Programs", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.SelectedMethod, new { @Value = "random" })
+
+        @Html.LabelFor(x => x.PointsNumber)
+        @Html.Editor("PointsNumber", new { htmlAttributes = new { @class = "form-control point-field" }, })
+        @Html.ValidationMessageFor(x => x.PointsNumber, null, new { @class = "alert-danger" })
+        <br />
+        @Html.LabelFor(x => x.CentroidsNumber)
+        @Html.Editor("CentroidsNumber", new { htmlAttributes = new { @class = "form-control point-field" }, })
+        @Html.ValidationMessageFor(x => x.CentroidsNumber, null, new { @class = "alert-danger" })
+        <br />
+        @Html.LabelFor(x => x.Dimnesion)
+        @Html.Editor("Dimnesion", new { htmlAttributes = new { @class = "form-control point-field" }, })
+        @Html.ValidationMessageFor(x => x.Dimnesion, null, new { @class = "alert-danger" })
+        <br /><br />
+        <input type="submit" class="btn btn-default" name="btnOK" value="OK" />
+    }
+    
+</div>
 
 
 
@@ -52,17 +97,47 @@
 
 @section scripts {
 <script>
-    function InsertRow() {
-        var rowsNumber = document.getElementById("tblPoints").rows.length;
-        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+    $(document).ready(function () {
+        $("#manuallyMethod").hide();
+        $("#randomMethod").hide();
 
-        var table = document.getElementById("tblPoints");
+        var selectedValue = $('input[name=dataEntryMethod]:checked').val();
+        if (selectedValue == 'manually') {
+            $("#manuallyMethod").show();
+        }
+        else if (selectedValue == 'random') {
+            $("#randomMethod").show();
+        }
+
+        $('input:radio[name=dataEntryMethod]').change(function () {
+            if (this.value == 'manually') {
+                $("#manuallyMethod").show();
+                $("#randomMethod").hide();
+            }
+            else if (this.value == 'random') {
+                $("#manuallyMethod").hide();
+                $("#randomMethod").show();
+            }
+        });
+    });
+
+    function InsertRow(tableId) {
+        var rowsNumber = document.getElementById(tableId).rows.length;
+        var columnsNumber = document.getElementById(tableId).rows[0].cells.length;
+
+        var table = document.getElementById(tableId);
         var row = table.insertRow(rowsNumber);
 
         for (column = 0; column < columnsNumber; column++) {
             var cell = row.insertCell(column);
 
-            var fieldName = "pointList[" + rowsNumber + "].Coordinate[" + column + "]";
+            var fieldName;
+            if (tableId == "tblPoints") {
+                fieldName = "PointList[" + rowsNumber + "].Coordinate[" + column + "]";
+            }
+            else if (tableId == "tblCentroids") {
+                fieldName = "CentroidList[" + rowsNumber + "].Coordinate[" + column + "]";
+            }
             var input = CreateInputField(fieldName);
             cell.appendChild(input);
         }
@@ -79,42 +154,62 @@
         return input;
     }
 
-    function DeleteRow() {
-        var rowsNumber = document.getElementById("tblPoints").rows.length;
-        if (rowsNumber > 2) {
-            document.getElementById("tblPoints").deleteRow(rowsNumber - 1);
+    function DeleteRow(tableId, minimalNumberOfRows) {
+        var rowsNumber = document.getElementById(tableId).rows.length;
+        if (rowsNumber > minimalNumberOfRows) {
+            document.getElementById(tableId).deleteRow(rowsNumber - 1);
         }
         else {
-            alert("Liczba punktów nie może być mniejsz niż 2.");
+            if (tableId == "tblPoints") {
+                alert("Liczba punktów nie może być mniejsz niż 2.");
+            }
+            else if (tableId == "tblCentroids") {
+                alert("Liczba centroidów nie może być mniejsz niż 1.");
+            }
+            
         }
     }
 
     function InsertColumn() {
-        var rowsNumber = document.getElementById("tblPoints").rows.length;
-        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+        for (j = 0; j < arguments.length; j++) {
+            var rowsNumber = document.getElementById(arguments[j]).rows.length;
+            var columnsNumber = document.getElementById(arguments[j]).rows[0].cells.length;
 
-        for (i = 0; i < rowsNumber; i++) {
-            var row = document.getElementById("tblPoints").rows[i];
-            var cell = row.insertCell(-1);
+            for (i = 0; i < rowsNumber; i++) {
+                var row = document.getElementById(arguments[j]).rows[i];
+                var cell = row.insertCell(-1);
 
-            var fieldName = "pointList[" + i + "].Coordinate[" + columnsNumber + "]";
-            var input = CreateInputField(fieldName);
-            cell.appendChild(input);
+                var fieldName;
+                if (arguments[j] == "tblPoints") {
+                    fieldName = "PointList[" + i + "].Coordinate[" + columnsNumber + "]";
+                }
+                else if (arguments[j] == "tblCentroids") {
+                    fieldName = "CentroidList[" + i + "].Coordinate[" + columnsNumber + "]";
+                }
+
+                var input = CreateInputField(fieldName);
+                cell.appendChild(input);
+            }
         }
     }
 
     function DeleteColumn() {
-        var rowsNumber = document.getElementById("tblPoints").rows.length;
-        var columnsNumber = document.getElementById('tblPoints').rows[0].cells.length;
+        for (j = 0; j < arguments.length; j++) {
+            var rowsNumber = document.getElementById(arguments[j]).rows.length;
+            var columnsNumber = document.getElementById(arguments[j]).rows[0].cells.length;
 
-        if (columnsNumber > 1) {
-            for (i = 0; i < rowsNumber; i++) {
-                var row = document.getElementById("tblPoints").rows[i];
-                row.deleteCell(-1);
+            if (columnsNumber > 1) {
+                for (i = 0; i < rowsNumber; i++) {
+                    var row = document.getElementById(arguments[j]).rows[i];
+                    row.deleteCell(-1);
+                }
             }
-        }
-        else {
-            alert("Liczba wymiarów nie może być mniejsz niż 1.");
+            else {
+                alert("Liczba wymiarów nie może być mniejsz niż 1.");
+
+                //exit from function
+                j = arguments.length;
+            }
         }
     }
 </script>

@@ -125,6 +125,7 @@
     <Compile Include="Areas\DataMining\Models\Centroid.cs" />
     <Compile Include="Areas\DataMining\Models\Coordinates.cs" />
     <Compile Include="Areas\DataMining\Models\Point.cs" />
+    <Compile Include="Areas\DataMining\Models\KMeansBusinessLayer.cs" />
     <Compile Include="Areas\DataMining\ViewModels\KMeansViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">

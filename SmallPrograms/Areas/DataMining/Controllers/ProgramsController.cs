@@ -19,18 +19,9 @@ namespace SmallPrograms.Areas.DataMining.Controllers
         public ActionResult KMeans()
         {
             KMeansViewModel kMeansVM = new KMeansViewModel();
-            kMeansVM.pointList = new List<Point>();
-            kMeansVM.centroidList = new List<Centroid>();
 
-            //add 3 2D points
-            kMeansVM.pointList.Add(new Point(-1, new double[2]));
-            kMeansVM.pointList.Add(new Point(-1, new double[2]));
-            kMeansVM.pointList.Add(new Point(-1, new double[2]));
-
-            //add 2 centroids
-            kMeansVM.centroidList.Add(new Centroid(1, new double[2]));
-            kMeansVM.centroidList.Add(new Centroid(2, new double[2]));
-
+            InitPointListForKMeansViewModel(kMeansVM);
+            InitCentroidListForKMeansViewModel(kMeansVM);
 
             return View(kMeansVM);
         }
@@ -39,16 +30,82 @@ namespace SmallPrograms.Areas.DataMining.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult KMeans(KMeansViewModel kMeansVM)
         {
+            KMeansBusinessLayer kMeansBL = new KMeansBusinessLayer();
+
+            //check validation input data
+            if (kMeansVM.SelectedMethod == "random")
+            {
+                string errrorMessage = kMeansBL.InputDataAreValid(kMeansVM.PointsNumber, kMeansVM.CentroidsNumber, kMeansVM.Dimnesion);
+                if (string.IsNullOrEmpty(errrorMessage) == false)
+                {
+                    ModelState.AddModelError("randomMethod", errrorMessage);
+                }
+                else
+                {
+
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                ViewBag.Valid = "True";
+                TempData["pointList"] = kMeansVM.PointList;
+                TempData["centroidList"] = kMeansVM.CentroidList;
+
+                RedirectToAction("KMeansResult", "Programs");
             }
             else
             {
-                ViewBag.Valid = "False";
+                kMeansVM.DataEntryMethods = kMeansBL.SetValuesToFalseInDict(kMeansVM.DataEntryMethods);
+                kMeansVM.DataEntryMethods[kMeansVM.SelectedMethod] = true;
+
+                bool pointListIsNotNull = kMeansVM.PointList != null;
+                bool centroidListIsNotNull = kMeansVM.CentroidList != null;
+                if (pointListIsNotNull == false)
+                {
+                    InitPointListForKMeansViewModel(kMeansVM);
+                }
+                if (centroidListIsNotNull == false)
+                {
+                    InitCentroidListForKMeansViewModel(kMeansVM);
+                }
             }
 
             return View(kMeansVM);
+        }
+
+        public ActionResult KMeansResult()
+        {
+            List<Point> pList = new List<Point>();
+            List<Centroid> cList = new List<Centroid>();
+
+            pList = (List<Point>)TempData["pointList"];
+            cList = (List<Centroid>)TempData["cList"];
+
+            return View();
+        }
+
+
+
+
+        [NonAction]
+        public void InitPointListForKMeansViewModel(KMeansViewModel kMeansVM)
+        {
+            kMeansVM.PointList = new List<Point>();
+
+            //add 3 2D points
+            kMeansVM.PointList.Add(new Point(-1, new double[2]));
+            kMeansVM.PointList.Add(new Point(-1, new double[2]));
+            kMeansVM.PointList.Add(new Point(-1, new double[2]));
+        }
+
+        [NonAction]
+        public void InitCentroidListForKMeansViewModel(KMeansViewModel kMeansVM)
+        {
+            kMeansVM.CentroidList = new List<Centroid>();
+
+            //add 2 2D centroids
+            kMeansVM.CentroidList.Add(new Centroid(1, new double[2]));
+            kMeansVM.CentroidList.Add(new Centroid(2, new double[2]));
         }
     }
 }
