@@ -126,6 +126,8 @@
     <Compile Include="Areas\DataMining\Models\Coordinates.cs" />
     <Compile Include="Areas\DataMining\Models\Point.cs" />
     <Compile Include="Areas\DataMining\Models\KMeansBusinessLayer.cs" />
+    <Compile Include="Areas\DataMining\Models\PointsAndCentroids.cs" />
+    <Compile Include="Areas\DataMining\ViewModels\KMeansResultViewModel.cs" />
     <Compile Include="Areas\DataMining\ViewModels\KMeansViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -145,6 +147,9 @@
     <Content Include="Areas\DataMining\Views\web.config" />
     <Content Include="Areas\DataMining\Views\Programs\Index.cshtml" />
     <Content Include="Areas\DataMining\Views\Programs\KMeans.cshtml" />
+    <Content Include="Areas\DataMining\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\DataMining\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\DataMining\Views\Programs\KMeansResult.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -172,7 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\DataMining\Views\Shared\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

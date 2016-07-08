@@ -23,6 +23,11 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             InitPointListForKMeansViewModel(kMeansVM);
             InitCentroidListForKMeansViewModel(kMeansVM);
 
+            string errorMessage = (string)TempData["enterDataError"];
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                ModelState.AddModelError("enterDataError", errorMessage);
+            }
             return View(kMeansVM);
         }
 
@@ -32,17 +37,35 @@ namespace SmallPrograms.Areas.DataMining.Controllers
         {
             KMeansBusinessLayer kMeansBL = new KMeansBusinessLayer();
 
-            //check validation input data
+            //check validation for input data
             if (kMeansVM.SelectedMethod == "random")
             {
-                string errrorMessage = kMeansBL.InputDataAreValid(kMeansVM.PointsNumber, kMeansVM.CentroidsNumber, kMeansVM.Dimnesion);
-                if (string.IsNullOrEmpty(errrorMessage) == false)
+                string errorMessage = kMeansBL.InputDataAreValid(kMeansVM.PointsNumber, kMeansVM.CentroidsNumber, kMeansVM.Dimnesion);
+                if (string.IsNullOrEmpty(errorMessage) == false)
                 {
-                    ModelState.AddModelError("randomMethod", errrorMessage);
+                    ModelState.AddModelError("randomMethod", errorMessage);
                 }
                 else
                 {
+                    PointsAndCentroids pac = new PointsAndCentroids();
+                    pac = kMeansBL.RandomInputData(kMeansVM.PointsNumber, kMeansVM.CentroidsNumber, kMeansVM.Dimnesion);
 
+                    kMeansVM.PointList = pac.PointList;
+                    kMeansVM.CentroidList = pac.CentroidList;
+                }
+            }
+            else if (kMeansVM.SelectedMethod == "manually")
+            {
+                string errorMessage1 = 
+                    kMeansBL.InputDataAreValid(kMeansVM.PointList.Count, kMeansVM.CentroidList.Count, kMeansVM.PointList[0].Coordinate.Length);
+                string errorMessage2 = kMeansBL.InputDataAreValid(kMeansVM.PointList, kMeansVM.CentroidList);
+                if (string.IsNullOrEmpty(errorMessage1) == false)
+                {
+                    ModelState.AddModelError("manuallyMethod1", errorMessage1);
+                }
+                if (string.IsNullOrEmpty(errorMessage2) == false)
+                {
+                    ModelState.AddModelError("manuallyMethod2", errorMessage1);
                 }
             }
 
@@ -51,13 +74,15 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                 TempData["pointList"] = kMeansVM.PointList;
                 TempData["centroidList"] = kMeansVM.CentroidList;
 
-                RedirectToAction("KMeansResult", "Programs");
+                return RedirectToAction("KMeansResult");
             }
             else
             {
+                //set selected method
                 kMeansVM.DataEntryMethods = kMeansBL.SetValuesToFalseInDict(kMeansVM.DataEntryMethods);
                 kMeansVM.DataEntryMethods[kMeansVM.SelectedMethod] = true;
 
+                //initialize object if object is null
                 bool pointListIsNotNull = kMeansVM.PointList != null;
                 bool centroidListIsNotNull = kMeansVM.CentroidList != null;
                 if (pointListIsNotNull == false)
@@ -75,13 +100,20 @@ namespace SmallPrograms.Areas.DataMining.Controllers
 
         public ActionResult KMeansResult()
         {
-            List<Point> pList = new List<Point>();
-            List<Centroid> cList = new List<Centroid>();
+            KMeansResultViewModel kMeansResultVM = new KMeansResultViewModel();
+            kMeansResultVM.inputPointList = new List<Point>();
+            kMeansResultVM.inputCentroidList = new List<Centroid>();
 
-            pList = (List<Point>)TempData["pointList"];
-            cList = (List<Centroid>)TempData["cList"];
+            kMeansResultVM.inputPointList = (List<Point>)TempData["pointList"];
+            kMeansResultVM.inputCentroidList = (List<Centroid>)TempData["centroidList"];
 
-            return View();
+            if ((kMeansResultVM.inputPointList != null && kMeansResultVM.inputCentroidList != null) == false)
+            {
+                TempData["enterDataError"] = "Podaj dane";
+                return RedirectToAction("Kmeans");
+            }
+
+            return View(kMeansResultVM);
         }
 
 

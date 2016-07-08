@@ -1,0 +1,42 @@
+﻿@model SmallPrograms.Areas.DataMining.ViewModels.KMeansResultViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "KMeansResult";
+}
+
+<h2>Wynik algorytmu k-means</h2>
+@Html.ActionLink("Podaj dane jeszcze raz", "KMeans", "Programs")<br /><br />
+
+<div>
+    <h4>Dane wejściowe</h4>
+    <table class="table-bordered" style="display:inline-table">
+        <caption>Punkty</caption>
+        @for (int row = 0; row < Model.inputPointList.Count; row++)
+            {
+            <tr>
+                @for (int column = 0; column < Model.inputPointList[row].Coordinate.Length; column++)
+                {
+                    <td>
+                        @Model.inputPointList[row].Coordinate[column]
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <tab></tab>
+    <table class="table-bordered" style="display:inline-table">
+        <caption>Centroidy</caption>
+        @for (int row = 0; row < Model.inputCentroidList.Count; row++)
+            {
+            <tr>
+                @for (int column = 0; column < Model.inputCentroidList[row].Coordinate.Length; column++)
+                {
+                    <td>
+                        @Model.inputCentroidList[row].Coordinate[column]
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>

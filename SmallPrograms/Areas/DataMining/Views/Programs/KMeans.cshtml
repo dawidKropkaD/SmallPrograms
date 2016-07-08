@@ -1,4 +1,5 @@
 ﻿@model SmallPrograms.Areas.DataMining.ViewModels.KMeansViewModel
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Algorytm k-means";
@@ -14,7 +15,17 @@ Ręczne wprowadzenie danych<tab></tab>
 Dane losowe
 <br /><br />
 
+@Html.ValidationMessage("enterDataError", new { @class = "alert-danger" })
+
 <div id="manuallyMethod">
+    @Html.ValidationMessage("manuallyMethod1", new { @class = "alert-danger" })
+    @Html.ValidationMessage("manuallyMethod2", new { @class = "alert-danger" })
+
+    <div class="alert alert-info">
+        Jeden wiersz odpowiada jednemu punktowi (centroidowi), natomiast liczba kolumn to wymiar punktu (centroidu).
+        Na przykład macierz 3x2 oznacza 3 punkty (centroidy) o dwóch wymiarach.
+    </div>
+
     <a href="javascript:InsertRow('tblPoints');">Dodaj punkt</a><tab></tab>
     <a href="javascript:InsertRow('tblCentroids');">Dodaj centroid</a><tab></tab>
     <a href="javascript:InsertColumn('tblPoints', 'tblCentroids');">Dodaj wymiar</a><tab></tab>
@@ -161,10 +172,10 @@ Dane losowe
         }
         else {
             if (tableId == "tblPoints") {
-                alert("Liczba punktów nie może być mniejsz niż 2.");
+                alert("Liczba punktów nie może być mniejsza niż 2.");
             }
             else if (tableId == "tblCentroids") {
-                alert("Liczba centroidów nie może być mniejsz niż 1.");
+                alert("Liczba centroidów nie może być mniejsza niż 1.");
             }
             
         }
@@ -205,7 +216,7 @@ Dane losowe
                 }
             }
             else {
-                alert("Liczba wymiarów nie może być mniejsz niż 1.");
+                alert("Liczba wymiarów nie może być mniejsza niż 1.");
 
                 //exit from function
                 j = arguments.length;
