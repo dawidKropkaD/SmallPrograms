@@ -9,6 +9,48 @@
 @Html.ActionLink("Podaj dane jeszcze raz", "KMeans", "Programs")<br /><br />
 
 <div>
+    <h4>Wynik</h4>
+    Liczba iteracji: @Model.NumberOfIterations <br />
+    <table class="table-bordered" style="display:inline-table">
+        <caption>Punkty</caption>
+        <tr>
+            <th>Grupa</th>
+        </tr>
+        @for (int row = 0; row < Model.outputPointList.Count; row++)
+            {
+            <tr>
+                <td>@Model.outputPointList[row].Group</td>
+                @for (int column = 0; column < Model.outputPointList[row].Coordinate.Length; column++)
+                {
+                    <td>
+                        @Model.outputPointList[row].Coordinate[column]
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    <tab></tab>
+    <table class="table-bordered" style="display:inline-table">
+        <caption>Centroidy</caption>
+        <tr>
+            <th>Nr grupy</th>
+        </tr>
+        @for (int row = 0; row < Model.outputCentroidList.Count; row++)
+            {
+            <tr>
+                <td>@Model.outputCentroidList[row].GroupNumber</td>
+                @for (int column = 0; column < Model.outputCentroidList[row].Coordinate.Length; column++)
+                {
+                    <td>
+                        @Model.outputCentroidList[row].Coordinate[column]
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+<br /><br />
+<div>
     <h4>Dane wejściowe</h4>
     <table class="table-bordered" style="display:inline-table">
         <caption>Punkty</caption>

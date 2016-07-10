@@ -28,6 +28,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             {
                 ModelState.AddModelError("enterDataError", errorMessage);
             }
+
             return View(kMeansVM);
         }
 
@@ -67,6 +68,15 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                 {
                     ModelState.AddModelError("manuallyMethod2", errorMessage1);
                 }
+
+                //if no error, set groups for centroids
+                if (ModelState.IsValid)
+                {
+                    for(int i = 0; i < kMeansVM.CentroidList.Count; i++)
+                    {
+                        kMeansVM.CentroidList[i].GroupNumber = (i + 1);
+                    }
+                }
             }
 
             if (ModelState.IsValid)
@@ -100,6 +110,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
 
         public ActionResult KMeansResult()
         {
+            KMeansBusinessLayer kMeansBL = new KMeansBusinessLayer();
             KMeansResultViewModel kMeansResultVM = new KMeansResultViewModel();
             kMeansResultVM.inputPointList = new List<Point>();
             kMeansResultVM.inputCentroidList = new List<Centroid>();
@@ -112,6 +123,8 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                 TempData["enterDataError"] = "Podaj dane";
                 return RedirectToAction("Kmeans");
             }
+
+            kMeansResultVM = kMeansBL.KMeansAlgorithm(kMeansResultVM.inputPointList, kMeansResultVM.inputCentroidList);
 
             return View(kMeansResultVM);
         }

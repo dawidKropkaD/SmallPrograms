@@ -10,5 +10,8 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
     {
         public List<Point> inputPointList { get; set; }
         public List<Centroid> inputCentroidList { get; set; }
+        public List<Point> outputPointList { get; set; }
+        public List<Centroid> outputCentroidList { get; set; }
+        public int NumberOfIterations { get; set; }
     }
 }

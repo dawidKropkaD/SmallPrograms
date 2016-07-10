@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmallPrograms.Areas.DataMining.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -106,5 +107,120 @@ namespace SmallPrograms.Areas.DataMining.Models
 
             return pointsAndCentroids;
         }
+
+        public KMeansResultViewModel KMeansAlgorithm(List<Point> pList, List<Centroid> cList)
+        {
+            List<Centroid> previousCentroidList = new List<Centroid>();
+            Centroid c = new Centroid();
+            Point p = new Point();
+            KMeansResultViewModel result = new KMeansResultViewModel();
+            result.inputPointList = new List<Point>();
+            result.inputCentroidList = new List<Centroid>();
+            result.outputPointList = new List<Point>();
+            result.outputCentroidList = new List<Centroid>();
+            
+            result.inputPointList = p.DeepCopy(pList);
+            result.inputCentroidList = c.DeepCopy(cList);
+            result.NumberOfIterations = 0;
+            do
+            {
+                result.NumberOfIterations++;
+                previousCentroidList = c.DeepCopy(cList);
+                pList = SetGroups(cList, pList);
+                cList = MoveCentroids(pList, cList);
+            } while (!previousCentroidList.SequenceEqual(cList, new CentroidComparer()));
+
+            result.outputPointList = pList;
+            result.outputCentroidList = cList;
+
+            return result;
+        }
+
+        public List<Centroid> MoveCentroids(List<Point> pList, List<Centroid> cList)
+        {
+            for (int i = 0; i < cList.Count; i++)
+            {
+                var points = pList.Select(p => p).Where(g => g.Group == cList[i].GroupNumber);
+                if (points.Count() != 0)
+                {
+                    for(int j = 0; j < cList[i].Coordinate.Length; j++)
+                    {
+                        double sum = points.Select(p => p.Coordinate[j]).Sum();
+                        double count = points.Select(p => p.Coordinate[j]).Count();
+                        cList[i].Coordinate[j] = sum / count;
+                    }
+                }
+            }
+
+            return cList;
+        }
+
+        public List<Point> SetGroups(List<Centroid> cList, List<Point> pList)
+        {
+            for (int i = 0; i < pList.Count; i++)
+            {
+                double[] distanceMemory = new double[cList.Count];
+                for (int j = 0; j < cList.Count; j++)
+                {
+                    distanceMemory[j] = DistanceBetweenPoints(pList[i].Coordinate, cList[j].Coordinate);
+                }
+                int indexOfNearestCentroid = GetIndexLeastElementInArray(distanceMemory);
+                pList[i].Group = cList[indexOfNearestCentroid].GroupNumber;
+            }
+
+            return pList;
+        }
+
+        public double DistanceBetweenPoints(double[] p1, double[] p2)
+        {
+            double distance = 0;
+            for(int k = 0; k < p1.Length; k++)
+            {
+                distance += Math.Pow(p2[k] - p1[k], 2);
+            }
+            distance = Math.Sqrt(distance);
+
+            return distance;
+        }
+
+        public int GetIndexLeastElementInArray(double[] array)
+        {
+            double min = array[0];
+            int index = 0;
+            for (int i = 1; i < array.Length; i++)
+            {
+                if (min > array[i])
+                {
+                    min = array[i];
+                    index = i;
+                }
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Deep clone for 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        //public List<Centroid> DeepCloneForListOfCentroids(List<Centroid> obj)
+        //{
+        //    List<Centroid> copy = new List<Centroid>();
+        //    for(int i = 0; i < obj.Count; i++)
+        //    {
+        //        Centroid centroid = new Centroid();
+        //        centroid.Coordinate = new double[obj[i].Coordinate.Length];
+
+        //        centroid.GroupNumber = obj[i].GroupNumber;
+        //        for(int j = 0; j < obj[i].Coordinate.Length; j++)
+        //        {
+        //            centroid.Coordinate[j] = obj[i].Coordinate[j];
+        //        }
+        //        copy.Add(centroid);
+        //    }
+
+        //    return copy;
+        //}
     }
 }
