@@ -124,11 +124,15 @@
     <Compile Include="Areas\DataMining\DataMiningAreaRegistration.cs" />
     <Compile Include="Areas\DataMining\Models\Centroid.cs" />
     <Compile Include="Areas\DataMining\Models\Coordinates.cs" />
+    <Compile Include="Areas\DataMining\Models\DeltaRule.cs" />
+    <Compile Include="Areas\DataMining\Models\PerceptronBusinessLayer.cs" />
     <Compile Include="Areas\DataMining\Models\Point.cs" />
     <Compile Include="Areas\DataMining\Models\KMeansBusinessLayer.cs" />
     <Compile Include="Areas\DataMining\Models\PointsAndCentroids.cs" />
+    <Compile Include="Areas\DataMining\Models\TrainingSet.cs" />
     <Compile Include="Areas\DataMining\ViewModels\KMeansResultViewModel.cs" />
     <Compile Include="Areas\DataMining\ViewModels\KMeansViewModel.cs" />
+    <Compile Include="Areas\DataMining\ViewModels\PerceptronViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -150,6 +154,7 @@
     <Content Include="Areas\DataMining\Views\_ViewStart.cshtml" />
     <Content Include="Areas\DataMining\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\DataMining\Views\Programs\KMeansResult.cshtml" />
+    <Content Include="Areas\DataMining\Views\Programs\Perceptron.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

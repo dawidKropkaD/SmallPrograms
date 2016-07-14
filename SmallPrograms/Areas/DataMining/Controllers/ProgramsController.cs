@@ -16,6 +16,71 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             return View();
         }
 
+        public ActionResult Perceptron()
+        {
+            PerceptronViewModel perceptronVM = new PerceptronViewModel();
+
+            return View(perceptronVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Perceptron
+            (
+            [Bind(Include = "NumberOfExamplesInTrainingSet, Threshold, LearningRate, MaxIterationNumberInDeltaRule, XCoordinate, YCoordinate, ")]
+            PerceptronViewModel perceptronVM, string btnSubmit
+            )
+        {
+            if (ModelState["NumberOfExamplesInTrainingSet"].Errors.Count != 0 || ModelState["Threshold"].Errors.Count != 0
+                || ModelState["LearningRate"].Errors.Count != 0 || ModelState["MaxIterationNumberInDeltaRule"].Errors.Count != 0)
+            {
+                perceptronVM.DisplayResult = false;
+            }
+            else
+            {
+                perceptronVM.DisplayResult = true;
+            }
+            
+
+            if (ModelState.IsValid == false)
+            {
+                return View(perceptronVM);
+            }
+
+            PerceptronBusinessLayer perceptronBL = new PerceptronBusinessLayer();
+            switch (btnSubmit)
+            {
+                case "Oblicz wagi":
+                    TrainingSet ts = new TrainingSet();
+
+                    ts = perceptronBL.GetTrainingSet(10, perceptronVM.NumberOfExamplesInTrainingSet, -100, 101);
+                    DeltaRule dr = perceptronBL.DeltaRule(ts, perceptronVM.LearningRate, perceptronVM.Threshold, perceptronVM.MaxIterationNumberInDeltaRule);
+                    perceptronVM.IterationNumberInDeltaRule = dr.IterationNumber;
+                    perceptronVM.WeightVector = dr.WeightVector;
+                    perceptronVM.NewThreshold = dr.Threshold;
+                    break;
+                    
+                case "OK":
+                    double[] coordinates = new double[2];
+                    coordinates[0] = perceptronVM.XCoordinate;
+                    coordinates[1] = perceptronVM.YCoordinate;
+
+                    if (perceptronBL.IsActivation(coordinates, perceptronVM.WeightVector, perceptronVM.NewThreshold) == 0)
+                    {
+                        perceptronVM.Output = "Brak aktywacji";
+                    }
+                    else
+                    {
+                        perceptronVM.Output = "Nastąpiła ktywacja";
+                    }
+                    break;
+            }
+
+            return View(perceptronVM);
+        }
+
+
+        #region k-means
         public ActionResult KMeans()
         {
             KMeansViewModel kMeansVM = new KMeansViewModel();
@@ -129,9 +194,6 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             return View(kMeansResultVM);
         }
 
-
-
-
         [NonAction]
         public void InitPointListForKMeansViewModel(KMeansViewModel kMeansVM)
         {
@@ -152,5 +214,6 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             kMeansVM.CentroidList.Add(new Centroid(1, new double[2]));
             kMeansVM.CentroidList.Add(new Centroid(2, new double[2]));
         }
+        #endregion
     }
 }
