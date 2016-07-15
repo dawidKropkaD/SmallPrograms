@@ -6,10 +6,14 @@
 
 <h2>Perceptron</h2>
 
+@Html.ValidationSummary(null, new { @class = "alert-danger" })
+<div class="alert-success">
+    @Html.DisplayFor(m => m.Output)
+</div>
+
 @using(Html.BeginForm("Perceptron", "Programs", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary(null, new { @class = "alert-danger" })
 
     <table>
         <tr>
@@ -37,7 +41,7 @@
         <table>
             <tr>
                 <td>@Html.LabelFor(w => w.WeightVector)</td>
-                <td>@Html.DisplayFor(w => w.WeightVector[0])<text>,</text> @Html.DisplayFor(w => w.WeightVector[1])</td>
+                <td>[@Html.DisplayFor(m => m.WeightVector[0]); @Html.DisplayFor(m => m.WeightVector[1])]</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(t => t.NewThreshold)</td>
@@ -53,11 +57,15 @@
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.YCoordinate)</td>
-                <td>@Html.TextBox("YCoordinate", "0", new { @class = "form-control" })</td>
+                <td>@Html.TextBoxFor(m => m.YCoordinate, new { @class = "form-control" })</td>
             </tr>
             <tr>
                 <td><input type="submit" class="btn btn-default" name="btnSubmit" value="OK" /></td>
             </tr>
         </table>
+        <input type="hidden" name="WeightVector[0]" value="@Model.WeightVector[0]">
+        <input type="hidden" name="WeightVector[1]" value="@Model.WeightVector[1]">
+        <input type="hidden" name="NewThreshold" value="@Model.NewThreshold">
+        <input type="hidden" name="IterationNumberInDeltaRule" value="@Model.IterationNumberInDeltaRule">
     </div>
 }

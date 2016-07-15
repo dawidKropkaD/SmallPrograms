@@ -10,7 +10,7 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
     public class PerceptronViewModel
     {
         [Display(Name ="Wektor wag: ")]
-        public double[] WeightVector { get; set; }
+        public double?[] WeightVector { get; set; }
 
         [Display(Name ="Stała ucząca: ")]
         [Range(0.01, 0.9)]
@@ -20,7 +20,7 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
         public double Threshold { get; set; }   //próg
 
         [Display(Name = "Nowy próg: ")]
-        public double NewThreshold { get; set; }
+        public double? NewThreshold { get; set; }
 
         [Display(Name = "Wynik: ")]
         public string Output { get; set; }
@@ -36,11 +36,11 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
         [Range(1, double.MaxValue)]
         public int MaxIterationNumberInDeltaRule { get; set; }
 
-        [Display(Name ="Współrzędna X: ")]
-        public double XCoordinate { get; set; }
+        [Display(Name ="Współrzędna X ")]
+        public double? XCoordinate { get; set; }
 
-        [Display(Name ="Współrzędna Y: ")]
-        public double YCoordinate { get; set; }
+        [Display(Name ="Współrzędna Y")]
+        public double? YCoordinate { get; set; }
 
         public bool DisplayResult { get; set; }
     }

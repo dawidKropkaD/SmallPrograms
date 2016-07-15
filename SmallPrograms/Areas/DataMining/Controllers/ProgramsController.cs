@@ -19,18 +19,17 @@ namespace SmallPrograms.Areas.DataMining.Controllers
         public ActionResult Perceptron()
         {
             PerceptronViewModel perceptronVM = new PerceptronViewModel();
+            perceptronVM.DisplayResult = false;
+            perceptronVM.WeightVector = new double?[2];
 
             return View(perceptronVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Perceptron
-            (
-            [Bind(Include = "NumberOfExamplesInTrainingSet, Threshold, LearningRate, MaxIterationNumberInDeltaRule, XCoordinate, YCoordinate, ")]
-            PerceptronViewModel perceptronVM, string btnSubmit
-            )
+        public ActionResult Perceptron(PerceptronViewModel perceptronVM, string btnSubmit)
         {
+            //set visibility for result
             if (ModelState["NumberOfExamplesInTrainingSet"].Errors.Count != 0 || ModelState["Threshold"].Errors.Count != 0
                 || ModelState["LearningRate"].Errors.Count != 0 || ModelState["MaxIterationNumberInDeltaRule"].Errors.Count != 0)
             {
@@ -40,40 +39,53 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             {
                 perceptronVM.DisplayResult = true;
             }
-            
 
-            if (ModelState.IsValid == false)
+
+            if (ModelState.IsValid)
             {
-                return View(perceptronVM);
-            }
+                PerceptronBusinessLayer perceptronBL = new PerceptronBusinessLayer();
+                switch (btnSubmit)
+                {
+                    case "Oblicz wagi":
+                        TrainingSet ts = new TrainingSet();
 
-            PerceptronBusinessLayer perceptronBL = new PerceptronBusinessLayer();
-            switch (btnSubmit)
-            {
-                case "Oblicz wagi":
-                    TrainingSet ts = new TrainingSet();
+                        ts = perceptronBL.GetTrainingSet(10, perceptronVM.NumberOfExamplesInTrainingSet, -100, 101);
+                        DeltaRule dr = perceptronBL.DeltaRule(ts, perceptronVM.LearningRate, perceptronVM.Threshold, perceptronVM.MaxIterationNumberInDeltaRule);
+                        perceptronVM.IterationNumberInDeltaRule = dr.IterationNumber;
+                        perceptronVM.WeightVector = perceptronBL.ConvertDoubleArrayToNullableDoubleArray(dr.WeightVector);
+                        for (int i = 0; i < perceptronVM.WeightVector.Length; i++)
+                        {
+                            perceptronVM.WeightVector[i] = Math.Round((double)perceptronVM.WeightVector[i], 3);
+                        }
+                        perceptronVM.NewThreshold = Math.Round(dr.Threshold, 3);
+                        break;
 
-                    ts = perceptronBL.GetTrainingSet(10, perceptronVM.NumberOfExamplesInTrainingSet, -100, 101);
-                    DeltaRule dr = perceptronBL.DeltaRule(ts, perceptronVM.LearningRate, perceptronVM.Threshold, perceptronVM.MaxIterationNumberInDeltaRule);
-                    perceptronVM.IterationNumberInDeltaRule = dr.IterationNumber;
-                    perceptronVM.WeightVector = dr.WeightVector;
-                    perceptronVM.NewThreshold = dr.Threshold;
-                    break;
-                    
-                case "OK":
-                    double[] coordinates = new double[2];
-                    coordinates[0] = perceptronVM.XCoordinate;
-                    coordinates[1] = perceptronVM.YCoordinate;
+                    case "OK":
+                        if ((perceptronVM.XCoordinate != null) == false)
+                        {
+                            ModelState.AddModelError("XCoordinate", "Pole Współrzędna X jest wymagane");
+                        }
+                        if ((perceptronVM.YCoordinate != null) == false)
+                        {
+                            ModelState.AddModelError("YCoordinate", "Pole Współrzędna Y jest wymagane");
+                        }
+                        else
+                        {
+                            double[] coordinates = new double[2];
+                            coordinates[0] = (double)perceptronVM.XCoordinate;
+                            coordinates[1] = (double)perceptronVM.YCoordinate;
 
-                    if (perceptronBL.IsActivation(coordinates, perceptronVM.WeightVector, perceptronVM.NewThreshold) == 0)
-                    {
-                        perceptronVM.Output = "Brak aktywacji";
-                    }
-                    else
-                    {
-                        perceptronVM.Output = "Nastąpiła ktywacja";
-                    }
-                    break;
+                            if (perceptronBL.IsActivation(coordinates, perceptronBL.ConvertNullableDoubleArrayToDoubleArray(perceptronVM.WeightVector), (double)perceptronVM.NewThreshold) == 0)
+                            {
+                                perceptronVM.Output = "Brak aktywacji";
+                            }
+                            else
+                            {
+                                perceptronVM.Output = "Nastąpiła aktywacja";
+                            }
+                        }
+                        break;
+                }
             }
 
             return View(perceptronVM);

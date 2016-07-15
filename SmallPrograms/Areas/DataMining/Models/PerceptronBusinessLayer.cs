@@ -54,7 +54,7 @@ namespace SmallPrograms.Areas.DataMining.Models
         /// <returns>Delta rule</returns>
         public DeltaRule DeltaRule(TrainingSet ts, double learningRate, double threshold, int maxIterationNumber)
         {
-            double errorRate = 0.05;    //współczynnik błędu
+            double errorRate = 0.0;    //współczynnik błędu
             int changeNumber = 0;
             int iterationNumber = 0;
             double[] weightVector = new double[2];
@@ -111,6 +111,28 @@ namespace SmallPrograms.Areas.DataMining.Models
                 return 1;
             }
             return 0;
+        }
+
+        public double?[] ConvertDoubleArrayToNullableDoubleArray(double[] array)
+        {
+            double?[] nullableArray = new double?[array.Length];
+            for(int i = 0; i < array.Length; i++)
+            {
+                nullableArray[i] = array[i];
+            }
+
+            return nullableArray;
+        }
+
+        public double[] ConvertNullableDoubleArrayToDoubleArray(double?[] nullableArray)
+        {
+            double[] array = new double[nullableArray.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = (double)nullableArray[i];
+            }
+
+            return array;
         }
     }
 }
