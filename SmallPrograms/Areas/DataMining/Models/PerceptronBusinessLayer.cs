@@ -54,7 +54,7 @@ namespace SmallPrograms.Areas.DataMining.Models
         /// <returns>Delta rule</returns>
         public DeltaRule DeltaRule(TrainingSet ts, double learningRate, double threshold, int maxIterationNumber)
         {
-            double errorRate = 0.0;    //współczynnik błędu
+            double errorRate = 0.02;    //współczynnik błędu
             int changeNumber = 0;
             int iterationNumber = 0;
             double[] weightVector = new double[2];

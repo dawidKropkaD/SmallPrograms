@@ -69,7 +69,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                         {
                             ModelState.AddModelError("YCoordinate", "Pole Współrzędna Y jest wymagane");
                         }
-                        else
+                        if (perceptronVM.XCoordinate != null && perceptronVM.YCoordinate != null)
                         {
                             double[] coordinates = new double[2];
                             coordinates[0] = (double)perceptronVM.XCoordinate;
