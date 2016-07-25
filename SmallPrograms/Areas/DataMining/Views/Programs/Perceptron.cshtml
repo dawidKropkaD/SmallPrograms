@@ -6,6 +6,11 @@
 
 <h2>Perceptron</h2>
 
+<div class="alert alert-info">
+    W przypadku, gdy następuje aktywacja, a nie powinna lub odwrotnie, być może zostały podane złe wartości dla
+    liczebności zbioru treningowego i/lub stałej uczącej i/lub maksymalnej liczby iteracji w regule delta.<br />
+</div>
+
 @Html.ValidationSummary(null, new { @class = "alert-danger" })
 <div class="alert-success">
     @Html.DisplayFor(m => m.Output)
