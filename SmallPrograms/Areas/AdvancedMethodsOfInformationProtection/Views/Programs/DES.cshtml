@@ -1,0 +1,13 @@
+﻿@model IEnumerable<byte>
+@{
+    ViewBag.Title = "DES";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Algorytm DES</h2>
+@{ 
+    foreach (var item in Model)
+    {
+        <span>@item</span>
+    }
+}
