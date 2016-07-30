@@ -174,7 +174,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
             byte[] leftSide = b.LeftSide;
             byte[] rightSide = b.RightSide;
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 15; i > -1; i--)
             {
                 byte[] fFunction = Ffunction(rightSide, subkeyList[i]);
                 xor = XOR(fFunction, leftSide);
