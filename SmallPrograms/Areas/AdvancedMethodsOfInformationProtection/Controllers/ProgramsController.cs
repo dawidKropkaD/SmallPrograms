@@ -21,14 +21,14 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
         {
             DESBusinessLayer des = new DESBusinessLayer();
             byte[] encryptedData = des.DESAlgorithm(new byte[64] { 1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,0,0,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,1,1,1,0,0,1,1,0,1,1,0,1,1,0,0,1,1,0,0,1,1,0,1,1,1,0,1 },
-                new byte[64] { 1,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,0,1,0,1,0,0,0,1,1,0,1,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,1,1,0,0 });
+                new byte[64] { 1,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,0,1,0,1,0,0,0,1,1,0,1,0,0,0,0,0,1,0,1,1,1,1,1,0,0,1,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,1,1,0,0 }, true);
 
             return View(encryptedData);
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult DES(string key, string message)
+        public ActionResult DES(string key, string text)
         {
             return View();
         }

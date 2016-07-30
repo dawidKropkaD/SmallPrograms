@@ -159,28 +159,41 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
         }
 
 
-        public byte[] DESAlgorithm(byte[] key, byte[] plainText)
+        public byte[] DESAlgorithm(byte[] key, byte[] text, bool encrypt)
         {
             List<byte[]> subkeyList = new List<byte[]>();
-
-            subkeyList = CreateSubkeys(key);
-
-            //ENCRYPT
             byte[] xor;
             byte[] finalBlock = new byte[64];   //block obtained after 16 iteratoions
 
-            byte[] outputIPPermutation = Permutation(plainText, initialIPPermutation);
+            subkeyList = CreateSubkeys(key);
+
+            byte[] outputIPPermutation = Permutation(text, initialIPPermutation);
             Block b = ArrayShare(outputIPPermutation);
             byte[] leftSide = b.LeftSide;
             byte[] rightSide = b.RightSide;
 
-            for (int i = 15; i > -1; i--)
+            if (encrypt == true)
             {
-                byte[] fFunction = Ffunction(rightSide, subkeyList[i]);
-                xor = XOR(fFunction, leftSide);
+                for (int i = 0; i < 16; i++)
+                {
+                    byte[] fFunction = Ffunction(rightSide, subkeyList[i]);
+                    xor = XOR(fFunction, leftSide);
 
-                leftSide = rightSide;
-                rightSide = xor;
+                    leftSide = rightSide;
+                    rightSide = xor;
+                }
+            }
+
+            if (encrypt == false)
+            {
+                for (int i = 15; i > -1; i--)
+                {
+                    byte[] fFunction = Ffunction(rightSide, subkeyList[i]);
+                    xor = XOR(fFunction, leftSide);
+
+                    leftSide = rightSide;
+                    rightSide = xor;
+                }
             }
 
             finalBlock = ConcatenateCDPair(rightSide, leftSide);
