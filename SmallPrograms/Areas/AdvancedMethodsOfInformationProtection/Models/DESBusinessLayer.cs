@@ -219,7 +219,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
         public List<byte[]> ArrayShareOnListOf64ElementsArrays(byte[] array)
         {
             List<byte[]> arrayList = new List<byte[]>();
-            double listSize = Math.Ceiling((double)(array.Length / 64));
+            int listSize = (int)Math.Ceiling((double)(array.Length / 64.0));
 
             for (int i = 0; i < listSize; i++)
             {
@@ -491,7 +491,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
         /// <returns>True if value is hexadecimal number, otherwise false</returns>
         public bool IsValidHex(string value)
         {
-            string hexCharacters = "0123456789ABCDEF";
+            string hexCharacters = "0123456789ABCDEFabcdef";
 
             foreach (var item in value)
             {
@@ -502,6 +502,43 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
             }
 
             return true;
+        }
+
+
+        /// <summary>
+        /// Check if parameter is binary number.
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <returns>True if value is binary number, otherwise false</returns>
+        public bool IsValidBinary(string value)
+        {
+            string binaryCharacters = "01";
+
+            foreach (var item in value)
+            {
+                if (binaryCharacters.Contains(item) == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// Gets every character in string and saves it in array.
+        /// </summary>
+        public byte[] ConvertStringToArray(string s)
+        {
+            byte[] array = new byte[s.Length];
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                array[i] = (byte)Char.GetNumericValue(s[i]);
+            }
+
+            return array;
         }
     }
 }
