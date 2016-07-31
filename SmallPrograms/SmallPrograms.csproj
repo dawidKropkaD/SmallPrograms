@@ -124,6 +124,7 @@
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Controllers\ProgramsController.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\Block.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\DESBusinessLayer.cs" />
+    <Compile Include="Areas\AdvancedMethodsOfInformationProtection\ViewModels\DESViewModel.cs" />
     <Compile Include="Areas\DataMining\Controllers\ProgramsController.cs" />
     <Compile Include="Areas\DataMining\DataMiningAreaRegistration.cs" />
     <Compile Include="Areas\DataMining\Models\Centroid.cs" />

@@ -159,6 +159,13 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
         }
 
 
+        /// <summary>
+        /// Encrypts or decrypts text using DES algorithm.
+        /// </summary>
+        /// <param name="key">64-bit key</param>
+        /// <param name="text">Text to encrypt or decrypt in binary format with a lenghth of 64 bits (64-element array of bits)</param>
+        /// <param name="encrypt">True - if you want to encrypt text, false - if you want to decrypt text.</param>
+        /// <returns>Encrypted or decrypted text in string</returns>
         public byte[] DESAlgorithm(byte[] key, byte[] text, bool encrypt)
         {
             List<byte[]> subkeyList = new List<byte[]>();
@@ -197,9 +204,61 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
             }
 
             finalBlock = ConcatenateCDPair(rightSide, leftSide);
-            byte[] encryptedText = Permutation(finalBlock, initialIPPermutationInverse);
+            byte[] desResult = Permutation(finalBlock, initialIPPermutationInverse);
 
-            return encryptedText;
+            return desResult;
+        }
+
+
+        /// <summary>
+        /// Divides array on list of 64-element arrays.
+        /// If array size is not multiple 64, missing elements are fill 0 on the left side.
+        /// </summary>
+        /// <param name="array">Array to divide</param>
+        /// <returns>List of 64-element arrays</returns>
+        public List<byte[]> ArrayShareOnListOf64ElementsArrays(byte[] array)
+        {
+            List<byte[]> arrayList = new List<byte[]>();
+            double listSize = Math.Ceiling((double)(array.Length / 64));
+
+            for (int i = 0; i < listSize; i++)
+            {
+                byte[] array64elements = new byte[64];
+
+                if (i != listSize - 1)
+                {
+                    for (int arrayIndex = i * 64, array64Index = 0; arrayIndex < i * 64 + 64; arrayIndex++, array64Index++)
+                    {
+                        array64elements[array64Index] = array[arrayIndex];
+                    }
+
+                    arrayList.Add(array64elements);
+                }
+                else
+                {
+                    for (int arrayIndex = array.Length - 1, array64Index = 63; arrayIndex >= i * 64; arrayIndex--, array64Index--)
+                    {
+                        array64elements[array64Index] = array[arrayIndex];
+                    }
+
+                    arrayList.Add(array64elements);
+                }
+            }
+
+            return arrayList;
+        }
+
+
+        public string ConvertArrayToString(byte[] array)
+        {
+            string sArray = string.Empty;
+
+            foreach (var item in array)
+            {
+                sArray += item.ToString();
+            }
+
+            return sArray;
         }
 
 
@@ -422,6 +481,27 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
             }
 
             return merged;
+        }
+
+
+        /// <summary>
+        /// Check if parameter is hexadecimal number.
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <returns>True if value is hexadecimal number, otherwise false</returns>
+        public bool IsValidHex(string value)
+        {
+            string hexCharacters = "0123456789ABCDEF";
+
+            foreach (var item in value)
+            {
+                if (hexCharacters.Contains(item)==false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
