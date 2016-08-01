@@ -16,7 +16,6 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             return View();
         }
 
-        #region DES
 
         public ActionResult DES()
         {
@@ -45,7 +44,6 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             #region  Convert text to byte array
             if (desVM.TextFormat == "hex")
             {
-                //binaryTekst = new byte[desVM.Text.Length * 4];
                 if (desBL.IsValidHex(desVM.Text))
                 {
                     sBinaryTekst= String.Join(String.Empty, desVM.Text.Select(
@@ -60,8 +58,6 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             }
             else //if(desVM.TextFormat == "binary")
             {
-                //binaryTekst = new byte[desVM.Text.Length];
-
                 if (desBL.IsValidBinary(desVM.Text))
                 {
                     binaryTekst = desBL.ConvertStringToArray(desVM.Text);
@@ -79,10 +75,10 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             {
                 if (desVM.Key.Length > 16)
                 {
-                    ModelState.AddModelError("", "Podaj maksymalnie 16 cyfr zapisanych w systemie szesnastkowym");
-
+                    ModelState.AddModelError("", "Klucz nie może być dłuższy niż 16 cyfr zapisanych w systemie szesnastkowym");
                     return View(desVM);
                 }
+
                 if (desBL.IsValidHex(desVM.Key))
                 {
                     desVM.Key = desVM.Key.PadLeft(16, '0');
@@ -92,18 +88,28 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Tekst nie jest liczbą szestastkową");
-
+                    ModelState.AddModelError("", "Klucz nie jest liczbą szestastkową");
                     return View(desVM);
                 }
             }
-            else if (desVM.KeyFormat == "decimal")
-            {
-
-            }
             else if (desVM.KeyFormat == "binary")
             {
+                if (desVM.Key.Length > 64)
+                {
+                    ModelState.AddModelError("", "Klucz nie może być dłuższy niż 64 cyfry zapisane w systemie dwójkowym");
+                    return View(desVM);
+                }
 
+                if (desBL.IsValidBinary(desVM.Key))
+                {
+                    desVM.Key = desVM.Key.PadLeft(64, '0');
+                    binaryKey = desBL.ConvertStringToArray(desVM.Key);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Klucz nie jest liczbą dwójkową");
+                    return View(desVM);
+                }
             }
             #endregion
 
@@ -124,14 +130,14 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
                 string sBinaryDESResult = desBL.ConvertArrayToString(binaryDESResult);
 
                 desVM.DESResultBinary += sBinaryDESResult;
-                desVM.DESResultHex += Convert.ToInt64(sBinaryDESResult, 2).ToString("X");
+                desVM.DESResultHex += (Convert.ToInt64(sBinaryDESResult, 2).ToString("X")).PadLeft(16, '0');
             }
 
+            desVM.DESResultBinary = desBL.AppendAtPosition(desVM.DESResultBinary, 4, " ");
+            desVM.DESResultHex = desBL.AppendAtPosition(desVM.DESResultHex, 4, " ");
             desVM.DisplayDESResult = "inline";
 
             return View(desVM);
         }
-
-        #endregion
     }
 }

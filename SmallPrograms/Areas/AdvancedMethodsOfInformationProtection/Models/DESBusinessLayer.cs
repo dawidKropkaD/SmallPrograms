@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
@@ -165,7 +166,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
         /// <param name="key">64-bit key</param>
         /// <param name="text">Text to encrypt or decrypt in binary format with a lenghth of 64 bits (64-element array of bits)</param>
         /// <param name="encrypt">True - if you want to encrypt text, false - if you want to decrypt text.</param>
-        /// <returns>Encrypted or decrypted text in string</returns>
+        /// <returns>Encrypted or decrypted text in byte array</returns>
         public byte[] DESAlgorithm(byte[] key, byte[] text, bool encrypt)
         {
             List<byte[]> subkeyList = new List<byte[]>();
@@ -539,6 +540,16 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
             }
 
             return array;
+        }
+
+
+        public string AppendAtPosition(string baseString, int position, string character)
+        {
+            var sb = new StringBuilder(baseString);
+            for (int i = position; i < sb.Length; i += (position + character.Length))
+                sb.Insert(i, character);
+
+            return sb.ToString();
         }
     }
 }

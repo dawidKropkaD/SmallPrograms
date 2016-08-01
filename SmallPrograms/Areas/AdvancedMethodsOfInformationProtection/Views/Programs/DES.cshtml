@@ -9,16 +9,18 @@
 @using(Html.BeginForm("DES", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
+    <div class="alert-danger">
+        @Html.ValidationSummary()
+    </div>
 
-    <h4>Tekst</h4>
-    @Html.TextAreaFor(m => m.Text)<br />
+    @Html.LabelFor(m => m.Text)
+    @Html.TextAreaFor(m => m.Text, new { style = "width:550px; height:100px;" })<br />
     @Html.RadioButton("TextFormat", "binary", true)<span>Dwójkowy</span>
     @Html.RadioButton("TextFormat", "hex")<span>Szesnastkowy</span>
     <br /><br />
 
-    <h4>Klucz</h4>
-    @Html.TextBoxFor(m => m.Key)<br />
+    @Html.LabelFor(m => m.Key)
+    @Html.TextBoxFor(m => m.Key, new { style = "width:550px;" })<br />
     @Html.RadioButton("KeyFormat", "binary", true)<span>Dwójkowy</span>
     @Html.RadioButton("KeyFormat", "hex")<span>Szesnastkowy</span>
     <br /><br />
@@ -29,7 +31,7 @@
 
 <br /><br />
 
-<div id="DESResult" style="display:@Model.DisplayDESResult">
+<div id="DESResult" class="alert-success" style="display:@Model.DisplayDESResult">
     @Html.LabelFor(m => m.DESResultBinary)
     @Html.DisplayFor(m => m.DESResultBinary)<br />
     @Html.LabelFor(m => m.DESResultHex)
