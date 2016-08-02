@@ -3,8 +3,13 @@
     ViewBag.Title = "Zaawansowane metody ochrony informacji";
 }
 
-@Html.ActionLink("Algorytm DES", "DES", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
+@Html.ActionLink("Szyfr DES", "DES", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
 <div class="alert alert-info">
     Szyfruje/deszyfruje tekst zapisany w postaci dwójkowej lub szesnastkowej, przy pomocy podanego klucza.
     Tekst nie może zawierać znaku enter (może natomiast zawierać spacje, podobnie jak klucz).
+</div>
+
+@Html.ActionLink("Szyfr monoalfabetyczny", "MonoalphabeticCipher", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
+<div class="alert alert-info">
+    Opis programu
 </div>

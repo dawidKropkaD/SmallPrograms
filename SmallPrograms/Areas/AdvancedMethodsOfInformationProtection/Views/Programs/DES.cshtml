@@ -13,13 +13,13 @@
         @Html.ValidationSummary()
     </div>
 
-    @Html.LabelFor(m => m.Text)
+    @Html.LabelFor(m => m.Text)<br />
     @Html.TextAreaFor(m => m.Text, new { style = "width:550px; height:100px;" })<br />
     @Html.RadioButton("TextFormat", "binary", true)<span>Dwójkowy</span>
     @Html.RadioButton("TextFormat", "hex")<span>Szesnastkowy</span>
     <br /><br />
 
-    @Html.LabelFor(m => m.Key)
+    @Html.LabelFor(m => m.Key)<br />
     @Html.TextBoxFor(m => m.Key, new { style = "width:550px;" })<br />
     @Html.RadioButton("KeyFormat", "binary", true)<span>Dwójkowy</span>
     @Html.RadioButton("KeyFormat", "hex")<span>Szesnastkowy</span>

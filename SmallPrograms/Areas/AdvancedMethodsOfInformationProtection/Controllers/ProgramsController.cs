@@ -22,6 +22,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             return View(new DESViewModel());
         }
 
+
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult DES(DESViewModel desVM, string btnSubmit)
@@ -138,6 +139,31 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Controllers
             desVM.DisplayDESResult = "inline";
 
             return View(desVM);
+        }
+
+
+        public ActionResult MonoalphabeticCipher()
+        {
+            return View(new MonoalphabeticCipherViewModel());
+        }
+
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult MonoalphabeticCipher(MonoalphabeticCipherViewModel mcVM)
+        {
+            if (ModelState.IsValid)
+            {
+                MonoalphabeticCipherBusinessLayer mcBL = new MonoalphabeticCipherBusinessLayer();
+                CipherAndKey cipherAndKey = new CipherAndKey();
+
+                cipherAndKey = mcBL.EncryptText(mcVM.PlainText, mcVM.PatternText);
+                mcVM.Cipher = cipherAndKey.Cipher;
+                mcVM.Key = cipherAndKey.Key;
+                mcVM.DisplayResult = "inline";
+            }
+
+            return View(mcVM);
         }
     }
 }

@@ -123,8 +123,11 @@
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\AdvancedMethodsOfInformationProtectionAreaRegistration.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Controllers\ProgramsController.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\Block.cs" />
+    <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\CipherAndKey.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\DESBusinessLayer.cs" />
+    <Compile Include="Areas\AdvancedMethodsOfInformationProtection\Models\MonoalphabeticCipherBusinessLayer.cs" />
     <Compile Include="Areas\AdvancedMethodsOfInformationProtection\ViewModels\DESViewModel.cs" />
+    <Compile Include="Areas\AdvancedMethodsOfInformationProtection\ViewModels\MonoalphabeticCipherViewModel.cs" />
     <Compile Include="Areas\DataMining\Controllers\ProgramsController.cs" />
     <Compile Include="Areas\DataMining\DataMiningAreaRegistration.cs" />
     <Compile Include="Areas\DataMining\Models\Centroid.cs" />
@@ -163,6 +166,7 @@
     <Content Include="Areas\AdvancedMethodsOfInformationProtection\Views\web.config" />
     <Content Include="Areas\AdvancedMethodsOfInformationProtection\Views\Programs\Index.cshtml" />
     <Content Include="Areas\AdvancedMethodsOfInformationProtection\Views\Programs\DES.cshtml" />
+    <Content Include="Areas\AdvancedMethodsOfInformationProtection\Views\Programs\MonoalphabeticCipher.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

@@ -1,0 +1,38 @@
+﻿@model SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.ViewModels.MonoalphabeticCipherViewModel
+
+@{
+    ViewBag.Title = "MonoalphabeticCipher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Szyfr monoalfabetyczny</h2>
+
+@using (Html.BeginForm("MonoalphabeticCipher", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="alert-danger">
+        @Html.ValidationSummary()
+    </div>
+
+    @Html.LabelFor(m => m.PlainText)<br />
+    @Html.TextAreaFor(m => m.PlainText, new { style = "width:550px; height:100px;" })<br /><br />
+    @Html.LabelFor(m => m.PatternText)<br />
+    @Html.TextAreaFor(m=>m.PatternText, new { style = "width:550px; height:100px;" })<br />
+
+    <input type="submit" name="Szyfruj" value="Szyfruj" />
+}
+<br /><br />
+
+<div class="alert-success" style="display:@Model.DisplayResult">
+    @Html.LabelFor(m => m.Cipher)<br />
+    @Html.DisplayFor(m => m.Cipher)<br /><br />
+
+    @Html.LabelFor(m => m.Key)<br />
+    @foreach (var item in Model.Key)
+    {
+        @item.Key
+        <span>=></span>
+        @item.Value
+        <br />
+    }
+</div>
