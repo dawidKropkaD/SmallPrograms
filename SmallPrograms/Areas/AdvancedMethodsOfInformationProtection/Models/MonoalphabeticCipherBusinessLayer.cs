@@ -38,6 +38,10 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
                 {
                     cipher += key[plainText[i]];
                 }
+                else if (alphabet.Contains(char.ToLowerInvariant(plainText[i])))
+                {
+                    cipher += char.ToUpperInvariant(key[char.ToLowerInvariant(plainText[i])]);
+                }
                 else
                 {
                     cipher += plainText[i];
@@ -73,7 +77,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
 
 
         /// <summary>
-        /// Counts how many times letter occurs in text
+        /// Counts how many times letter occurs in text, without case insensitive
         /// </summary>
         /// <param name="text"></param>
         /// <returns>Sorted descending dictionary according the number of occurrences of letters in the text,
@@ -89,9 +93,9 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
 
             for (int i = 0; i < text.Length; i++)
             {
-                if (alphabet.Contains(text[i]))
+                if (alphabet.Contains(char.ToUpperInvariant(text[i])) || alphabet.Contains(char.ToLowerInvariant(text[i])))
                 {
-                    frequency[text[i]] += 1;
+                    frequency[char.ToLowerInvariant(text[i])] += 1;
                 }
             }
 

@@ -11,5 +11,11 @@
 
 @Html.ActionLink("Szyfr monoalfabetyczny", "MonoalphabeticCipher", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
 <div class="alert alert-info">
-    Opis programu
+    Tekst szyfrowany jest w następujący sposób:<br>
+    liczone jest ile razy dana litera (od a do z, bez polskich liter) występuje w tekście wzorcowym,
+    a następnie litery sortowane są malejąco ze względu na ilośc wystąpień. Jeśli kilka liter występuje tyle samo razy,
+    wyżej jest ta, która jest wcześniej w alfabecie. W ten sposób otrzymujemy tajny alfabet 
+    i na jego podstawie tworzony jest szyfr. Wielkość liter nie ma znaczenia, zarówno w tekście jawnym 
+    jak i przy zliczniu wystąpień liter w tekście wzorcowym. Litery nie wchodzące w zkład alfabetu
+    oraz znaki nie są szyfrowane. 
 </div>

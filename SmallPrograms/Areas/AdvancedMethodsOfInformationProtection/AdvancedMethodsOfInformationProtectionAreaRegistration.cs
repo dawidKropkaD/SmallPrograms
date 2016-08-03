@@ -16,7 +16,7 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection
         {
             context.MapRoute(
                 "AdvancedMethodsOfInformationProtection_default",
-                "AdvancedMethodsOfInformationProtection/{controller}/{action}/{id}",
+                "AMOIP/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }
