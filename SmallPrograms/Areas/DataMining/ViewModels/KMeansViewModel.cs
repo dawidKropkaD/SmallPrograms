@@ -38,7 +38,9 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
         public int Dimnesion { get; set; }
 
         public Dictionary<string, bool> DataEntryMethods { get; set; }
+
         public string SelectedMethod { get; set; }
+
 
 
         public KMeansViewModel()
@@ -46,6 +48,26 @@ namespace SmallPrograms.Areas.DataMining.ViewModels
             DataEntryMethods = new Dictionary<string, bool>();
             DataEntryMethods.Add("manually", true);
             DataEntryMethods.Add("random", false);
+        }
+
+        public KMeansViewModel(int pointsNumber, int centroidsNumber, int dimension)
+        {
+            DataEntryMethods = new Dictionary<string, bool>();
+            DataEntryMethods.Add("manually", true);
+            DataEntryMethods.Add("random", false);
+
+            PointList = new List<Point>();
+            CentroidList = new List<Centroid>();
+
+            for (int i = 0; i < pointsNumber; i++)
+            {
+                PointList.Add(new Point(-1, new double[dimension]));
+            }
+
+            for (int i = 0; i < centroidsNumber; i++)
+            {
+                CentroidList.Add(new Centroid(i + 1, new double[2]));
+            }
         }
     }
 }

@@ -11,16 +11,16 @@ namespace SmallPrograms.Areas.AdvancedMethodsOfInformationProtection.Models
     /// </summary>
     public class CipherAndKey
     {
-        public CipherAndKey()
-        {
-            Key = new Dictionary<char, char>();
-        }
-
-
         [Display(Name = "Szyfr")]
         public string Cipher { get; set; }
 
         [Display(Name = "Klucz")]
         public Dictionary<char, char> Key { get; set; }
+
+
+        public CipherAndKey()
+        {
+            Key = new Dictionary<char, char>();
+        }
     }
 }

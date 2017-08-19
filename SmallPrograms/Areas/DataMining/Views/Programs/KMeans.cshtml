@@ -33,7 +33,7 @@ Dane losowe
     <a href="javascript:DeleteRow('tblCentroids', 1);">Usuń centroid</a><tab></tab>
     <a href="javascript:DeleteColumn('tblPoints', 'tblCentroids');">Usuń wymiar</a>
 
-    @using (Html.BeginForm("KMeans", "Programs", FormMethod.Post))
+    @using (Html.BeginForm("KMeansResult", "Programs", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.SelectedMethod, new { @Value = "manually" })
@@ -80,7 +80,7 @@ Dane losowe
 <div id="randomMethod">
     @Html.ValidationMessage("randomMethod", new { @class = "alert-danger" })
 
-    @using (Html.BeginForm("KMeans", "Programs", FormMethod.Post))
+    @using (Html.BeginForm("KMeansResult", "Programs", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.SelectedMethod, new { @Value = "random" })

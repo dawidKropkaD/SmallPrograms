@@ -1,18 +1,17 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-@{ 
+﻿@{ 
     ViewBag.Title = "Eksploracja danych";
 }
 
 @Html.ActionLink("K-means", "KMeans", "Programs")<br />
 <div class="alert alert-info">
-    Opis programu
+    <a href="https://pl.wikipedia.org/wiki/Algorytm_centroid%C3%B3w">https://pl.wikipedia.org/wiki/Algorytm_centroid%C3%B3w</a>
 </div>
-<br />
+<hr />
 
 @Html.ActionLink("Perceptron", "Perceptron", "Programs")<br />
 <div class="alert alert-info">
-    Perceptron dyskretny, unipolarny. Aktywuje się, gdy suma współrzędnych X i Y jest większa od progu.<br />
-    Współrzędne w zbiorze treningowym są z przedziału [-100, 100], natomiast próg wynosi 10.
+    Perceptron dyskretny, bipolarny. Aktywuje się, gdy suma współrzędnych X i Y jest większa od podanego przez użytkownika progu.<br />
+    Współrzędne w zbiorze treningowym są z przedziału [-100, 100].
+    <br />
+    <a href="http://users.pja.edu.pl/~msyd/wyk-nai/perceptron3-pl.pdf">Informacje nt. perceptronu</a>
 </div>

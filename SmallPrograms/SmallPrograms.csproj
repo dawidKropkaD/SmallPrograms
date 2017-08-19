@@ -160,7 +160,6 @@
     <Content Include="Areas\DataMining\Views\Programs\Index.cshtml" />
     <Content Include="Areas\DataMining\Views\Programs\KMeans.cshtml" />
     <Content Include="Areas\DataMining\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\DataMining\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\DataMining\Views\Programs\KMeansResult.cshtml" />
     <Content Include="Areas\DataMining\Views\Programs\Perceptron.cshtml" />
     <Content Include="Areas\AdvancedMethodsOfInformationProtection\Views\web.config" />
@@ -191,11 +190,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\Temp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\AdvancedMethodsOfInformationProtection\Views\Shared\" />
+    <Folder Include="Areas\DataMining\Views\Shared\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

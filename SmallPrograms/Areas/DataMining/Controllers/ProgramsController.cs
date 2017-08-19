@@ -49,10 +49,11 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                     case "Oblicz wagi":
                         TrainingSet ts = new TrainingSet();
 
-                        ts = perceptronBL.GetTrainingSet(10, perceptronVM.NumberOfExamplesInTrainingSet, -100, 101);
+                        ts = perceptronBL.GetTrainingSet(perceptronVM.Threshold, perceptronVM.NumberOfExamplesInTrainingSet, -100, 101);
                         DeltaRule dr = perceptronBL.DeltaRule(ts, perceptronVM.LearningRate, perceptronVM.Threshold, perceptronVM.MaxIterationNumberInDeltaRule);
                         perceptronVM.IterationNumberInDeltaRule = dr.IterationNumber;
                         perceptronVM.WeightVector = perceptronBL.ConvertDoubleArrayToNullableDoubleArray(dr.WeightVector);
+                        
                         for (int i = 0; i < perceptronVM.WeightVector.Length; i++)
                         {
                             perceptronVM.WeightVector[i] = Math.Round((double)perceptronVM.WeightVector[i], 3);
@@ -61,11 +62,11 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                         break;
 
                     case "OK":
-                        if ((perceptronVM.XCoordinate != null) == false)
+                        if (perceptronVM.XCoordinate == null)
                         {
                             ModelState.AddModelError("XCoordinate", "Pole Współrzędna X jest wymagane");
                         }
-                        if ((perceptronVM.YCoordinate != null) == false)
+                        if (perceptronVM.YCoordinate == null)
                         {
                             ModelState.AddModelError("YCoordinate", "Pole Współrzędna Y jest wymagane");
                         }
@@ -95,23 +96,13 @@ namespace SmallPrograms.Areas.DataMining.Controllers
         #region k-means
         public ActionResult KMeans()
         {
-            KMeansViewModel kMeansVM = new KMeansViewModel();
-
-            InitPointListForKMeansViewModel(kMeansVM);
-            InitCentroidListForKMeansViewModel(kMeansVM);
-
-            string errorMessage = (string)TempData["enterDataError"];
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                ModelState.AddModelError("enterDataError", errorMessage);
-            }
-
-            return View(kMeansVM);
+            return View(new KMeansViewModel(3, 2, 2));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult KMeans(KMeansViewModel kMeansVM)
+        public ActionResult KMeansResult([Bind(Include = "PointList,CentroidList,PointsNumber,CentroidsNumber,Dimnesion,SelectedMethod,DataEntryMethods")] KMeansViewModel kMeansVM)
         {
             KMeansBusinessLayer kMeansBL = new KMeansBusinessLayer();
 
@@ -134,7 +125,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
             }
             else if (kMeansVM.SelectedMethod == "manually")
             {
-                string errorMessage1 = 
+                string errorMessage1 =
                     kMeansBL.InputDataAreValid(kMeansVM.PointList.Count, kMeansVM.CentroidList.Count, kMeansVM.PointList[0].Coordinate.Length);
                 string errorMessage2 = kMeansBL.InputDataAreValid(kMeansVM.PointList, kMeansVM.CentroidList);
                 if (string.IsNullOrEmpty(errorMessage1) == false)
@@ -149,7 +140,7 @@ namespace SmallPrograms.Areas.DataMining.Controllers
                 //if no error, set groups for centroids
                 if (ModelState.IsValid)
                 {
-                    for(int i = 0; i < kMeansVM.CentroidList.Count; i++)
+                    for (int i = 0; i < kMeansVM.CentroidList.Count; i++)
                     {
                         kMeansVM.CentroidList[i].GroupNumber = (i + 1);
                     }
@@ -158,73 +149,26 @@ namespace SmallPrograms.Areas.DataMining.Controllers
 
             if (ModelState.IsValid)
             {
-                TempData["pointList"] = kMeansVM.PointList;
-                TempData["centroidList"] = kMeansVM.CentroidList;
+                KMeansResultViewModel kMeansResultVM = new KMeansResultViewModel();
 
-                return RedirectToAction("KMeansResult");
+                kMeansResultVM = kMeansBL.KMeansAlgorithm(kMeansVM.PointList, kMeansVM.CentroidList);
+
+                return View(kMeansResultVM);
             }
             else
             {
-                //set selected method
-                kMeansVM.DataEntryMethods = kMeansBL.SetValuesToFalseInDict(kMeansVM.DataEntryMethods);
+                kMeansBL.SetValuesToFalseInDict(kMeansVM.DataEntryMethods);
                 kMeansVM.DataEntryMethods[kMeansVM.SelectedMethod] = true;
+                var tmp = kMeansVM.DataEntryMethods;
 
-                //initialize object if object is null
-                bool pointListIsNotNull = kMeansVM.PointList != null;
-                bool centroidListIsNotNull = kMeansVM.CentroidList != null;
-                if (pointListIsNotNull == false)
+                if (kMeansVM.PointList==null || kMeansVM.CentroidList== null)
                 {
-                    InitPointListForKMeansViewModel(kMeansVM);
+                    kMeansVM = new KMeansViewModel(3, 2, 2); 
                 }
-                if (centroidListIsNotNull == false)
-                {
-                    InitCentroidListForKMeansViewModel(kMeansVM);
-                }
+                kMeansVM.DataEntryMethods = tmp;
+                                
+                return View("KMeans", kMeansVM);
             }
-
-            return View(kMeansVM);
-        }
-
-        public ActionResult KMeansResult()
-        {
-            KMeansBusinessLayer kMeansBL = new KMeansBusinessLayer();
-            KMeansResultViewModel kMeansResultVM = new KMeansResultViewModel();
-            kMeansResultVM.inputPointList = new List<Point>();
-            kMeansResultVM.inputCentroidList = new List<Centroid>();
-
-            kMeansResultVM.inputPointList = (List<Point>)TempData["pointList"];
-            kMeansResultVM.inputCentroidList = (List<Centroid>)TempData["centroidList"];
-
-            if ((kMeansResultVM.inputPointList != null && kMeansResultVM.inputCentroidList != null) == false)
-            {
-                TempData["enterDataError"] = "Podaj dane";
-                return RedirectToAction("Kmeans");
-            }
-
-            kMeansResultVM = kMeansBL.KMeansAlgorithm(kMeansResultVM.inputPointList, kMeansResultVM.inputCentroidList);
-
-            return View(kMeansResultVM);
-        }
-
-        [NonAction]
-        public void InitPointListForKMeansViewModel(KMeansViewModel kMeansVM)
-        {
-            kMeansVM.PointList = new List<Point>();
-
-            //add 3 2D points
-            kMeansVM.PointList.Add(new Point(-1, new double[2]));
-            kMeansVM.PointList.Add(new Point(-1, new double[2]));
-            kMeansVM.PointList.Add(new Point(-1, new double[2]));
-        }
-
-        [NonAction]
-        public void InitCentroidListForKMeansViewModel(KMeansViewModel kMeansVM)
-        {
-            kMeansVM.CentroidList = new List<Centroid>();
-
-            //add 2 2D centroids
-            kMeansVM.CentroidList.Add(new Centroid(1, new double[2]));
-            kMeansVM.CentroidList.Add(new Centroid(2, new double[2]));
         }
         #endregion
     }

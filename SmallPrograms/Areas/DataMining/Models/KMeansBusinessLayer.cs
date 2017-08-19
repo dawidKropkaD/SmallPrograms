@@ -114,29 +114,26 @@ namespace SmallPrograms.Areas.DataMining.Models
             Centroid c = new Centroid();
             Point p = new Point();
             KMeansResultViewModel result = new KMeansResultViewModel();
-            result.inputPointList = new List<Point>();
-            result.inputCentroidList = new List<Centroid>();
-            result.outputPointList = new List<Point>();
-            result.outputCentroidList = new List<Centroid>();
             
-            result.inputPointList = p.DeepCopy(pList);
-            result.inputCentroidList = c.DeepCopy(cList);
+            result.InputPointList = p.DeepCopy(pList);
+            result.InputCentroidList = c.DeepCopy(cList);
             result.NumberOfIterations = 0;
+
             do
             {
                 result.NumberOfIterations++;
                 previousCentroidList = c.DeepCopy(cList);
-                pList = SetGroups(cList, pList);
-                cList = MoveCentroids(pList, cList);
+                SetGroups(cList, pList);
+                MoveCentroids(pList, cList);
             } while (!previousCentroidList.SequenceEqual(cList, new CentroidComparer()));
 
-            result.outputPointList = pList;
-            result.outputCentroidList = cList;
+            result.OutputPointList = pList;
+            result.OutputCentroidList = cList;
 
             return result;
         }
 
-        public List<Centroid> MoveCentroids(List<Point> pList, List<Centroid> cList)
+        public void MoveCentroids(List<Point> pList, List<Centroid> cList)
         {
             for (int i = 0; i < cList.Count; i++)
             {
@@ -151,11 +148,9 @@ namespace SmallPrograms.Areas.DataMining.Models
                     }
                 }
             }
-
-            return cList;
         }
 
-        public List<Point> SetGroups(List<Centroid> cList, List<Point> pList)
+        public void SetGroups(List<Centroid> cList, List<Point> pList)
         {
             for (int i = 0; i < pList.Count; i++)
             {
@@ -167,8 +162,6 @@ namespace SmallPrograms.Areas.DataMining.Models
                 int indexOfNearestCentroid = GetIndexLeastElementInArray(distanceMemory);
                 pList[i].Group = cList[indexOfNearestCentroid].GroupNumber;
             }
-
-            return pList;
         }
 
         public double DistanceBetweenPoints(double[] p1, double[] p2)
@@ -198,29 +191,5 @@ namespace SmallPrograms.Areas.DataMining.Models
 
             return index;
         }
-
-        /// <summary>
-        /// Deep clone for 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        //public List<Centroid> DeepCloneForListOfCentroids(List<Centroid> obj)
-        //{
-        //    List<Centroid> copy = new List<Centroid>();
-        //    for(int i = 0; i < obj.Count; i++)
-        //    {
-        //        Centroid centroid = new Centroid();
-        //        centroid.Coordinate = new double[obj[i].Coordinate.Length];
-
-        //        centroid.GroupNumber = obj[i].GroupNumber;
-        //        for(int j = 0; j < obj[i].Coordinate.Length; j++)
-        //        {
-        //            centroid.Coordinate[j] = obj[i].Coordinate[j];
-        //        }
-        //        copy.Add(centroid);
-        //    }
-
-        //    return copy;
-        //}
     }
 }

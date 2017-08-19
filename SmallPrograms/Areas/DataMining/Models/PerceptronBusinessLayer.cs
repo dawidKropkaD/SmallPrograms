@@ -55,18 +55,18 @@ namespace SmallPrograms.Areas.DataMining.Models
         public DeltaRule DeltaRule(TrainingSet ts, double learningRate, double threshold, int maxIterationNumber)
         {
             double errorRate = 0.02;    //współczynnik błędu
-            int changeNumber = 0;
-            int iterationNumber = 0;
+            int changesNumber = 0;
+            int iterationsNumber = 0;
             double[] weightVector = new double[2];
             //set random weight
             Random r = new Random();
-            weightVector[0] = -10;
-            weightVector[1] = 20;
+            weightVector[0] = r.Next(-10, 21);
+            weightVector[1] = r.Next(-10, 21);
 
             do
             {
-                iterationNumber++;
-                changeNumber = 0;
+                iterationsNumber++;
+                changesNumber = 0;
                 for (int i = 1; i < ts.ExampleList.Count(); i++)
                 {
                     int y = IsActivation(ts.ExampleList[i].InputVector, weightVector, threshold);
@@ -77,16 +77,16 @@ namespace SmallPrograms.Areas.DataMining.Models
                     }
                     if (ts.ExampleList[i].Output - y != 0)
                     {
-                        changeNumber++;
+                        changesNumber++;
                     }
                 }
             }
-            while ((double)changeNumber / ts.ExampleList.Count > errorRate && iterationNumber < maxIterationNumber);
+            while ((double)changesNumber / ts.ExampleList.Count > errorRate && iterationsNumber < maxIterationNumber);
 
             DeltaRule dr = new DeltaRule();
             dr.WeightVector = weightVector;
             dr.Threshold = threshold;
-            dr.IterationNumber = iterationNumber;
+            dr.IterationNumber = iterationsNumber;
 
             return dr;
         }

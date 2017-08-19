@@ -2,30 +2,42 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<h4>
+    Zbiór czterech niewielkich programów.
+</h4>
+<ul>
+    <li>
+        @Html.ActionLink("Perceptron", "Perceptron", "Programs", new { area = "DataMining" }, new { })
+        <div class="alert alert-info">
+            Perceptron dyskretny, bipolarny. Aktywuje się, gdy suma współrzędnych X i Y jest większa od podanego przez użytkownika progu.<br />
+            Współrzędne w zbiorze treningowym są z przedziału [-100, 100].
+            <br />
+            <a href="http://users.pja.edu.pl/~msyd/wyk-nai/perceptron3-pl.pdf">Informacje nt. perceptronu</a>
+        </div>
+    </li>
+    <li>
+        @Html.ActionLink("K-means", "KMeans", "Programs", new { area = "DataMining" }, new { })
+        <div class="alert alert-info">
+            <a href="https://pl.wikipedia.org/wiki/Algorytm_centroid%C3%B3w">https://pl.wikipedia.org/wiki/Algorytm_centroid%C3%B3w</a>
+        </div>
+    </li>
+    <li>
+        @Html.ActionLink("Szyfr monoalfabetyczny", "MonoalphabeticCipher", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
+        <div class="alert alert-info">
+            Tekst szyfrowany jest w następujący sposób:<br>
+            liczone jest ile razy dana litera (od a do z, bez polskich liter) występuje w tekście wzorcowym,
+            a następnie litery sortowane są malejąco ze względu na ilośc wystąpień. Jeśli kilka liter występuje tyle samo razy,
+            wyżej jest ta, która jest wcześniej w alfabecie. W ten sposób otrzymujemy tajny alfabet
+            i na jego podstawie tworzony jest szyfr. Wielkość liter nie ma znaczenia, zarówno w tekście jawnym
+            jak i przy zliczniu wystąpień liter w tekście wzorcowym. Litery nie wchodzące w zkład alfabetu
+            oraz znaki nie są szyfrowane.
+        </div>
+    </li>
+    <li>
+        @Html.ActionLink("Szyfr DES", "DES", "Programs", new { area = "AdvancedMethodsOfInformationProtection" }, new { })
+        <div class="alert alert-info">
+            Szyfruje/deszyfruje tekst zapisany w postaci dwójkowej lub szesnastkowej, przy pomocy podanego klucza.
+            Tekst nie może zawierać znaku enter (może natomiast zawierać spacje, podobnie jak klucz).
+        </div>
+    </li>
+</ul>
