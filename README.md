@@ -1,6 +1,6 @@
 # SmallPrograms
 <h4>
-    Zbiór czterech niewielkich programów.
+    Aplikacja internetowa, na którą składają się cztery niewielkie programy:
 </h4>
 <ul>
     <li>
